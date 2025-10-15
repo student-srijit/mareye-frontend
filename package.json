@@ -3,15 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/start-build.js",
-    "dev": "node scripts/start-dev.js",
-    "dev:all": "node scripts/start-all.js",
-    "build:direct": "next build",
-    "dev:direct": "next dev",
+    "build": "next build",
+    "dev": "next dev",
     "dev:port": "next dev --port 3001",
-    "dev:concurrent": "concurrently \"npm run dev\" \"npm run flask\" \"npm run crowdfunding\"",
-    "flask": "node scripts/start-flask.js",
-    "crowdfunding": "node scripts/start-crowdfunding.js",
     "lint": "next lint",
     "start": "next start"
   },
