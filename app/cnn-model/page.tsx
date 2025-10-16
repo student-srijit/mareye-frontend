@@ -270,14 +270,29 @@ export default function CNNModelPage() {
   }
 
   const downloadEnhancedImage = () => {
-    if (imageResult?.data?.enhanced_path) {
+    if (imageResult?.data?.enhanced_data) {
+      // Download base64 image
+      const link = document.createElement('a')
+      link.href = `data:image/jpeg;base64,${imageResult.data.enhanced_data}`
+      link.download = `enhanced_${selectedImage?.name || 'image'}.jpg`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      toast.success('Enhanced image downloaded!')
+    } else if (imageResult?.data?.enhanced_path) {
       window.open(`${CNN_BACKEND_URL}/api/download/${encodeURIComponent(imageResult.data.enhanced_path)}`, '_blank')
+      toast.success('Enhanced image downloaded!')
+    } else {
+      toast.error('No enhanced image available for download')
     }
   }
 
   const downloadEnhancedVideo = () => {
     if (videoResult?.data?.enhanced_path) {
       window.open(`${CNN_BACKEND_URL}/api/download/${encodeURIComponent(videoResult.data.enhanced_path)}`, '_blank')
+      toast.success('Enhanced video downloaded!')
+    } else {
+      toast.error('No enhanced video available for download')
     }
   }
 
@@ -288,17 +303,40 @@ export default function CNNModelPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            MAR EYE CNN Model
-          </h1>
-          <p className="text-blue-200 text-lg">
-            Advanced Underwater Image & Video Enhancement with Epoch 4 Model
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-emerald-500/10 rounded-full blur-lg animate-pulse delay-500"></div>
+        <div className="absolute top-1/3 right-1/3 w-20 h-20 bg-purple-500/10 rounded-full blur-lg animate-pulse delay-700"></div>
+      </div>
+      
+      <div className="relative z-10 p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Header */}
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400/30 to-blue-500/30 rounded-2xl mb-6 shadow-lg shadow-cyan-500/20">
+              <ImageIcon className="w-10 h-10 text-cyan-300" />
+            </div>
+            <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
+              MAR EYE CNN Model
+            </h1>
+            <p className="text-blue-200 text-xl max-w-3xl mx-auto leading-relaxed">
+              Advanced Underwater Image & Video Enhancement with Epoch 4 Model
+            </p>
+            <div className="mt-4 flex justify-center space-x-4">
+              <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-400/30 px-4 py-2">
+                Real-time Processing
+              </Badge>
+              <Badge className="bg-blue-500/20 text-blue-300 border-blue-400/30 px-4 py-2">
+                AI-Powered Enhancement
+              </Badge>
+              <Badge className="bg-purple-500/20 text-purple-300 border-purple-400/30 px-4 py-2">
+                Professional Analytics
+              </Badge>
+            </div>
+          </div>
 
         {/* Image Enhancement Section */}
         <Card className="bg-slate-900/50 border-blue-500/30 backdrop-blur-md">
