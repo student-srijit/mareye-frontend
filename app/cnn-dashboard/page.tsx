@@ -588,14 +588,96 @@ export default function CNNDashboard() {
 
                 {/* Results */}
                 {results && (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {results.success ? (
-                      <Alert className="bg-green-900/50 border-green-500">
-                        <CheckCircle className="h-4 w-4" />
-                        <AlertDescription className="text-green-200">
-                          Analytics completed successfully!
-                        </AlertDescription>
-                      </Alert>
+                      <>
+                        <Alert className="bg-green-900/50 border-green-500">
+                          <CheckCircle className="h-4 w-4" />
+                          <AlertDescription className="text-green-200">
+                            Analytics completed successfully!
+                          </AlertDescription>
+                        </Alert>
+                        
+                        {/* Analytics Results Display */}
+                        {results.data && (
+                          <div className="space-y-6">
+                            {/* Metrics Display */}
+                            {results.metrics && (
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <Card className="bg-slate-800 border-blue-500/30">
+                                  <CardContent className="p-4 text-center">
+                                    <div className="text-2xl font-bold text-blue-400">
+                                      {results.metrics.psnr?.toFixed(2) || 'N/A'} dB
+                                    </div>
+                                    <div className="text-sm text-gray-300">PSNR</div>
+                                  </CardContent>
+                                </Card>
+                                <Card className="bg-slate-800 border-green-500/30">
+                                  <CardContent className="p-4 text-center">
+                                    <div className="text-2xl font-bold text-green-400">
+                                      {results.metrics.ssim?.toFixed(4) || 'N/A'}
+                                    </div>
+                                    <div className="text-sm text-gray-300">SSIM</div>
+                                  </CardContent>
+                                </Card>
+                                <Card className="bg-slate-800 border-purple-500/30">
+                                  <CardContent className="p-4 text-center">
+                                    <div className="text-2xl font-bold text-purple-400">
+                                      {results.metrics.uiqm_improvement?.toFixed(1) || 'N/A'}%
+                                    </div>
+                                    <div className="text-sm text-gray-300">UIQM Improvement</div>
+                                  </CardContent>
+                                </Card>
+                              </div>
+                            )}
+                            
+                            {/* Analytics Files Display */}
+                            {results.data.analytics_files && (
+                              <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-white">Analysis Reports & Graphs</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {Object.entries(results.data.analytics_files).map(([key, path]) => (
+                                    <Card key={key} className="bg-slate-800 border-blue-500/30">
+                                      <CardContent className="p-4">
+                                        <div className="flex items-center justify-between">
+                                          <div>
+                                            <div className="font-medium text-white capitalize">
+                                              {key.replace(/_/g, ' ')}
+                                            </div>
+                                            <div className="text-sm text-gray-400">
+                                              {typeof path === 'string' ? path.split('/').pop() : 'Generated'}
+                                            </div>
+                                          </div>
+                                          <Button
+                                            size="sm"
+                                            onClick={() => window.open(`${CNN_BACKEND_URL}/api/download/${encodeURIComponent(path)}`, '_blank')}
+                                            className="bg-blue-600 hover:bg-blue-700"
+                                          >
+                                            <Download className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Download All Analytics */}
+                            {results.data.analytics_path && (
+                              <div className="text-center">
+                                <Button
+                                  onClick={() => window.open(`${CNN_BACKEND_URL}/api/download/${encodeURIComponent(results.data.analytics_path)}`, '_blank')}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                  <Download className="w-4 h-4 mr-2" />
+                                  Download Complete Analytics Report
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <Alert className="bg-red-900/50 border-red-500">
                         <XCircle className="h-4 w-4" />
